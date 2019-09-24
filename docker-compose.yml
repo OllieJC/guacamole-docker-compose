@@ -34,7 +34,7 @@
 #
 #  !!!!! MAKE SURE your folder './init' is executable (chmod +x ./init)
 #  !!!!! or 'initdb.sql' will be ignored!
-#  
+#
 #  './data' will hold all data after first start!
 #
 # (2)
@@ -88,12 +88,16 @@ networks:
   guacnetwork_compose:
     driver: bridge
 
+volumes:
+  postgres_data:
+
 # services
 services:
   # guacd
   guacd:
     container_name: guacd_compose
     image: guacamole/guacd
+    #:0.9.14
     networks:
       guacnetwork_compose:
     restart: always
@@ -108,13 +112,14 @@ services:
       POSTGRES_DB: guacamole_db
       POSTGRES_PASSWORD: ChooseYourOwnPasswordHere1234
       POSTGRES_USER: guacamole_user
-    image: postgres
+    build:
+      context: .
+      dockerfile: Dockerfile-postgres
     networks:
       guacnetwork_compose:
     restart: always
     volumes:
-    - ./init:/docker-entrypoint-initdb.d:ro
-    - ./data:/var/lib/postgresql/data:rw
+    - postgres_data:/var/lib/postgresql/data:rw
 
   # guacamole
   guacamole:
@@ -129,15 +134,16 @@ services:
       POSTGRES_PASSWORD: ChooseYourOwnPasswordHere1234
       POSTGRES_USER: guacamole_user
     image: guacamole/guacamole
+    #:0.9.14
     links:
     - guacd
     networks:
       guacnetwork_compose:
     ports:
 ## enable next line if not using nginx
-##    - 8080:8080/tcp
+    - 8080:8080/tcp
 ## enable next line when using nginx
-    - 8080/tcp
+##    - 8080/tcp
     restart: always
 
 ########### optional ##############
@@ -147,6 +153,7 @@ services:
    restart: always
    image: nginx
    volumes:
+   - ./testing.html:/var/www/test/testing.html
    - ./nginx/ssl/self.cert:/etc/nginx/ssl/self.cert:ro
    - ./nginx/ssl/self-ssl.key:/etc/nginx/ssl/self-ssl.key:ro
    - ./nginx/nginx.conf:/etc/nginx/nginx.conf:ro

@@ -1,0 +1,28 @@
+<!doctype html>
+
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <title>Testing Apache Guacamole iframe</title>
+  <script type="text/javascript">
+    function load() {
+      document.getElementsByTagName("iframe")[0].height = (window.innerHeight - 70);
+      document.getElementsByTagName("iframe")[0].width = (window.innerWidth - 70);
+    }
+    window.onload = load;
+
+    function frame_load() {
+      var frame = document.getElementsByTagName("iframe")[0];
+      frame.contentWindow.document.getElementsByTagName("input")[0].value = "guacadmin";
+      frame.contentWindow.document.getElementsByTagName("input")[1].value = "guacadmin";
+      //frame.contentWindow.document.getElementsByTagName("input")[2].click();
+    }
+  </script>
+</head>
+
+<body>
+  <div style="padding:20px">
+    <iframe onload="javascript:setTimeout(frame_load, 500);" src="https://localhost:8443/#/"></iframe>
+  </div>
+</body>
+</html>

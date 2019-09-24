@@ -43,4 +43,7 @@ server {
         root   /usr/share/nginx/html;
     }
 
+    location = /testing.html {
+        alias /var/www/test/testing.html;
+    }
 }

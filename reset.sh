@@ -9,5 +9,5 @@ echo ""   # (optional) move to a new line
 if [[ $REPLY =~ ^[Yy]$ ]]; then # do dangerous stuff
  chmod -R +x -- ./init
  sudo rm -r -f ./data/ ./drive/ ./record/ ./nginx/ssl/
+ docker volume rm $(docker volume ls -f name="guacamole*" -q)
 fi
-
